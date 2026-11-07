@@ -1,0 +1,43 @@
+# User data, credentials, downloaded media, and disposable fixtures
+/data/
+/downloads/
+/work/
+*.dpapi
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.cookies
+cookies.txt
+.env
+.env.*
+!.env.example
+*.log
+
+# Python and tooling
+/.venv/
+/venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local packaging output
+/build/
+/dist/
+/release/
+*.spec
+*.zip
+*.part
+*.tmp
+
+# OS and editor files
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

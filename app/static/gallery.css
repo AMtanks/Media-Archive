@@ -1,0 +1,79 @@
+/* Image-only masonry. Metadata appears only on hover, focus or selection. */
+.masonry { --gallery-columns: 4; position: relative; min-height: 150px; user-select: none; }
+.masonry > .media-card, .masonry > .gallery-skeleton { position: absolute; left: 0; top: 0; margin: 0; border-radius: 6px; overflow: hidden; background: var(--surface); }
+.masonry > .gallery-empty { position: relative; width: 100%; }
+.media-card .preview-surface { min-height: 0; }
+.media-card .media-thumb { aspect-ratio: auto 1 / 1; }
+.media-card:hover .media-thumb { transform: scale(1.02); }
+
+.tile-overlay { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: flex-end; padding: 28px 10px 8px; background: linear-gradient(transparent, rgba(0, 0, 0, .7)); opacity: 0; pointer-events: none; transition: opacity .2s var(--ease); }
+.tile-caption { overflow: hidden; color: #fff; font-size: 12px; font-weight: 600; line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
+.tile-caption small { display: block; color: rgba(255, 255, 255, .7); font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* 18px circular delete cross, 44px hit area. */
+.tile-delete { position: absolute; top: 0; right: 0; z-index: 2; width: 44px; height: 44px; min-height: 44px; padding: 0; border-radius: 0; background: transparent; font-size: 0; opacity: 0; pointer-events: none; transition: opacity .15s var(--ease); }
+.tile-delete:hover { background: transparent; }
+.tile-delete .delete-icon { position: absolute; top: 13px; left: 13px; width: 18px; height: 18px; border-radius: 50%; background: rgba(0, 0, 0, .5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #fff; pointer-events: none; transition: background .15s var(--ease); }
+.delete-icon::before, .delete-icon::after { content: ""; position: absolute; left: 4px; top: 8.25px; width: 10px; height: 1.5px; border-radius: 1px; background: currentColor; transform: rotate(45deg); }
+.delete-icon::after { transform: rotate(-45deg); }
+.tile-delete:hover .delete-icon { background: var(--error); }
+
+.tile-video { position: absolute; top: 10px; left: 10px; padding: 2px 7px; border-radius: 980px; background: rgba(0, 0, 0, .5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #fff; font-size: 10px; font-weight: 600; pointer-events: none; }
+
+.media-card:hover .tile-overlay, .media-card:focus-within .tile-overlay, .media-card.selected .tile-overlay { opacity: 1; }
+.media-card:hover .tile-delete, .tile-delete:focus-visible, .media-card.selected .tile-delete { opacity: 1; pointer-events: auto; }
+body.gallery-hover-paused #media-body .tile-delete, body.gallery-hover-paused #media-body .tile-overlay { opacity: 0; pointer-events: none; }
+.media-card.selected::after { content: ""; position: absolute; inset: 0; z-index: 3; border-radius: 6px; box-shadow: inset 0 0 0 3px var(--accent); pointer-events: none; }
+
+/* Floating capsule action bar */
+.selection-toolbar {
+  position: fixed; bottom: 24px; left: calc(50% + 110px); z-index: 20; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 18px; max-width: calc(100vw - 260px); padding: 8px 8px 8px 20px;
+  border-radius: 980px; background: var(--popover); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 0 0 1px var(--ring), 0 12px 40px var(--shadow); animation: bar-in .25s var(--ease);
+}
+@keyframes bar-in { from { opacity: 0; transform: translate(-50%, 10px); } }
+.selection-toolbar > span { font-size: 13px; font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.selection-toolbar > div { display: flex; gap: 6px; }
+.selection-toolbar button { min-height: 32px; }
+.selection-box { position: fixed; z-index: 25; pointer-events: none; border: 1px solid var(--accent); border-radius: 3px; background: var(--accent-soft); }
+/* Applied to body only: a universal selector here restyles every card when a drag starts. */
+.selecting-media { user-select: none; cursor: crosshair; }
+.selecting-media .card-preview { cursor: crosshair; }
+.selecting-media .media-card { pointer-events: none; }
+.media-viewer .viewer-stage, .media-viewer img, .media-viewer video { cursor: default; }
+
+/* Excluded list cards keep their detail row. */
+.excluded-card { background: var(--surface); }
+.excluded-card .card-detail button { min-height: 28px; font-size: 12px; }
+
+@media (min-width: 1600px) { .masonry { --gallery-columns: 5; } }
+@media (max-width: 1250px) { .masonry { --gallery-columns: 3; } }
+@media (max-width: 850px) {
+  .masonry { --gallery-columns: 2; }
+  .selection-toolbar { left: calc(50% + 90px); max-width: calc(100vw - 210px); gap: 10px; flex-wrap: wrap; border-radius: 18px; }
+}
+@media (max-width: 600px) {
+  .selection-toolbar { left: 12px; right: 12px; bottom: 12px; transform: none; max-width: none; justify-content: space-between; animation: none; }
+  .selection-toolbar button { padding: 6px 10px; font-size: 12px; }
+  .tile-delete { opacity: 1; pointer-events: auto; }
+}
+@media (max-width: 350px) { .masonry { --gallery-columns: 1; } }
+
+/* Live events panel matches the height of its neighbour on wide screens. */
+@media (min-width: 851px) {
+  .lower-grid .panel:nth-child(2) { position: relative; min-height: 250px; }
+  .lower-grid .live-events { position: absolute; top: 52px; bottom: 0; left: 0; right: 0; overflow-y: auto; }
+}
+@media (max-width: 850px) { .lower-grid .live-events { max-height: 480px; overflow-y: auto; } }
+
+/* Viewer side arrows appear only when the pointer reaches them. */
+.viewer-content { position: relative; }
+.viewer-nav { position: absolute; top: 50%; z-index: 1; display: grid; place-items: center; width: 72px; height: 120px; padding: 0; border-radius: 0; background: transparent; opacity: 0; transform: translateY(-50%); transition: opacity .2s var(--ease); }
+.viewer-nav span { display: grid; place-items: center; width: 40px; height: 40px; padding-bottom: 3px; border-radius: 50%; background: rgba(255, 255, 255, .14); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #fff; font-size: 28px; line-height: 1; }
+.viewer-nav:hover, .viewer-nav:focus-visible { opacity: 1; background: transparent; }
+.viewer-nav:disabled { visibility: hidden; }
+.viewer-prev { left: 0; }
+.viewer-next { right: 0; }
+@media (hover: none) { .viewer-nav:not(:disabled) { opacity: .85; } }
+:root[data-theme="light"] .viewer-nav span { background: rgba(0, 0, 0, .08); color: var(--ink); }
